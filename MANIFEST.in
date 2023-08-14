@@ -1,0 +1,4 @@
+include README.md
+recursive-include copilot *.txt
+recursive-include copilot *.yaml
+recursive-include copilot *.json

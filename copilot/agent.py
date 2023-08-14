@@ -4,10 +4,11 @@ from typing import Tuple, Optional
 import openai
 from prompt_toolkit import prompt as pt_prompt
 
-from copilot.tools.entry import call_tool
+from copilot.tools.tool_executor import call_tool
+from copilot.prompt.prompt_generator import generate_init_prompt
+from copilot.utils.pretty_print import pretty_print
 
-openai.api_base = 'https://api.aiproxy.io/v1'
-openai.api_key = 'sk-BOxpA7cacbcTP94LuUXqCIyBauSynr7BLTcIudkAB3hqw9Ru'
+openai.api_key = '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'
 
 OPENAI_COMPLETION_OPTIONS = {
     'temperature': 0.7,
@@ -46,7 +47,10 @@ def convert_tool_result_to_string(name: str, returns: Optional[tuple]):
 
 
 class LLMAgent:
-    def __init__(self, init_prompt: str):
+    def __init__(self, task_prompt: str):
+        init_prompt = generate_init_prompt(
+            task_prompt
+        )
         self.messages = [
             {'role': 'user', 'content': init_prompt}
         ]
@@ -58,7 +62,8 @@ class LLMAgent:
                 messages=self.messages,
                 **OPENAI_COMPLETION_OPTIONS)
             reply_content = res.choices[0]['message']['content']
-            print('AI: ' + reply_content)
+            print('AI:')
+            pretty_print(reply_content)
             need_stop = pt_prompt('Continue to run? (y/n): ')
             if need_stop.lower() == 'n':
                 break
@@ -72,7 +77,7 @@ class LLMAgent:
                 command_reply = convert_tool_result_to_string(command_name, result)
             except Exception as e:
                 command_reply = f'Occur error:\n{e}'
-            print(f'Command result: {command_reply}')
+            print(f'Tool:\n{command_reply}')
             self.messages += [
                 {'role': 'user', 'content': command_reply},
             ]
