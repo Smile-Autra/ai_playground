@@ -35,6 +35,7 @@ setup(
     long_description=read("README.md"),
 
     packages=find_packages(exclude=('tests', 'scripts')),
+    include_package_data=True,
 
     install_requires=parse_requirements(),
     entry_points={

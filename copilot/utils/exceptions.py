@@ -1,0 +1,2 @@
+class ReplyFormatError(Exception):
+    pass

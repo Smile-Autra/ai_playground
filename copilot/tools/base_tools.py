@@ -9,7 +9,10 @@ from copilot.tools.tool_executor import register_tool
 
 @register_tool(description='Write content to file')
 def write_file(content: str, file_path: str):
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    if os.path.exists(file_path):
+        raise RuntimeError(f'File {file_path} already exists, you cannot overwrite it.')
+    if not os.path.exists(os.path.dirname(file_path)):
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, 'w') as f:
         f.write(content)
 
@@ -59,3 +62,9 @@ def exec_command(command: str) -> Tuple[bool, str]:
                returns={'answer': 'str'})
 def ask_human(question: str) -> str:
     return pt_prompt(f'AI: {question}')
+
+
+@register_tool(description='Task complete')
+def task_complete(reason: str):
+    print(f'Task complete, reason: {reason}')
+    exit(0)

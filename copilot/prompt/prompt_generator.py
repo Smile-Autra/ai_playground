@@ -1,8 +1,9 @@
+import os
 from string import Template
 
 from copilot.tools.tool_executor import gen_tool_prompts
 
-PROMPT_TEMPLATE = 'copilot/prompt/prompt_template.txt'
+PROMPT_TEMPLATE = os.path.join(os.path.dirname(__file__), 'prompt_template.txt')
 
 
 def generate_init_prompt(task: str) -> str:

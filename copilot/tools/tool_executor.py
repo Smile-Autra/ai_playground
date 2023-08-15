@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Callable
 from dataclasses import dataclass
 from inspect import signature
 
@@ -6,6 +6,7 @@ from inspect import signature
 @dataclass
 class Tool:
     name: str
+    func: Callable
     description: str
     args: Dict[str, str]
     returns: Dict[str, str]
@@ -20,7 +21,7 @@ def register_tool(description: str,
         name = func.__name__
         sig = signature(func)
         args = {name: param.annotation.__name__ for name, param in sig.parameters.items()}
-        TOOLS[name] = Tool(name, description, args, returns)
+        TOOLS[name] = Tool(name, func, description, args, returns)
         return func
 
     return wrapper
@@ -31,7 +32,7 @@ def call_tool(name: str, **kwargs):
         raise ValueError(f'Unknown tool: {name}')
 
     tool = TOOLS[name]
-    return tool(**kwargs)
+    return tool.func(**kwargs)
 
 
 def _gen_single_prompt(tool: Tool):
