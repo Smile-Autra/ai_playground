@@ -25,7 +25,7 @@ def read(filename: str) -> str:
 
 setup(
     name="copilot",
-    version="0.1.1",
+    version="0.1.2",
     url="https://github.com/Smile-Autra/ai_playground",
 
     author="Smile",
