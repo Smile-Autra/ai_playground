@@ -5,7 +5,7 @@ def pretty_print(content_json: dict):
             print(f'{key}:')
             pretty_print(value)
         else:
-            if '\n' in value or len(value) > 100:
+            if isinstance(value, str) and ('\n' in value or len(value) > 100):
                 print(f'{key}:\n{value}')
             else:
                 print(f'{key}: {value}')
